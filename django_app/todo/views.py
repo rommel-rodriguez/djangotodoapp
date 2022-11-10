@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate
 
 SIGNUP_TEMPLATE = 'todo/signupuser.html'
 LOGIN_TEMPLATE = 'todo/loginuser.html'
+CREATETODO_TEMPLATE = 'todo/loginuser.html'
 USERNAME_INPUT = 'username'
 FIRST_PASS_INPUT = 'password1'
 SECOND_PASS_INPUT = 'password2'
@@ -89,6 +90,15 @@ def loginuser(request):
 def logoutuser(request):
     logout(request)
     return redirect('hometodos')
+
+
+@require_http_methods(["GET", "POST"])
+def createtodo(request):
+    if request.method == 'GET':
+        return render(request,
+                      CREATETODO_TEMPLATE,
+                      dict(form=UserCreationForm())
+                      )
 
 
 def currenttodos(request):

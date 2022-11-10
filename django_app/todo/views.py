@@ -9,6 +9,8 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate
 
+from .forms import TodoForm
+
 SIGNUP_TEMPLATE = 'todo/signupuser.html'
 LOGIN_TEMPLATE = 'todo/loginuser.html'
 CREATETODO_TEMPLATE = 'todo/loginuser.html'
@@ -97,7 +99,7 @@ def createtodo(request):
     if request.method == 'GET':
         return render(request,
                       CREATETODO_TEMPLATE,
-                      dict(form=UserCreationForm())
+                      dict(form=TodoForm())
                       )
 
 

@@ -3,16 +3,20 @@
 {% block content %}
 
 
-<ul>
-    <li>
-        {{ todo.title }}
-    <form method="POST">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit">Update</button>
-    </form>
-    </li>
-</ul>
+{{ todo.title }}
+<form method="POST">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <button type="submit">Update</button>
+</form>
+<form method="POST" action="{% url 'completetodo' todo.id %}">
+    {% csrf_token %}
+    <button type="submit">Complete</button>
+</form>
+<form method="POST" action="{% url 'deletetodo' todo.id %}">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+</form>
 
 {% endblock %}
 

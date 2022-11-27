@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
@@ -15,6 +16,7 @@ from .models import Todo
 SIGNUP_TEMPLATE = 'todo/signupuser.html'
 LOGIN_TEMPLATE = 'todo/loginuser.html'
 CREATETODO_TEMPLATE = 'todo/createtodo.html'
+TODODETAIL_TEMPLATE = 'todo/tododetail.html'
 USERNAME_INPUT = 'username'
 FIRST_PASS_INPUT = 'password1'
 SECOND_PASS_INPUT = 'password2'
@@ -120,5 +122,19 @@ def createtodo(request):
 
 
 def currenttodos(request):
-    todos = Todo.objects.all() 
+    todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
     return render(request, 'todo/currenttodos.html', dict(todos=todos))
+
+
+@require_http_methods(["GET", "POST"])
+def viewtodo(request, todo_pk):
+    todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    if request.method == 'GET':
+        form = TodoForm(instance=todo)
+        return render(request, TODODETAIL_TEMPLATE, dict(todo=todo, form=form))
+    try:
+        form = TodoForm(request.POST, instance=todo)
+        form.save()
+        return redirect('currenttodos')
+    except ValueError: 
+        return render(request, TODODETAIL_TEMPLATE, dict(todo=todo, form=form,error='Bad Form'))

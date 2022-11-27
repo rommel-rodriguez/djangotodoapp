@@ -1,6 +1,14 @@
 {% if user.is_authenticated %}
 
 Logged In as {{ user.username }}
+<!-- TODO: Add this ul to a nav bar using bootstrap later -->
+<ul>
+  <li><a href="{% url 'createtodo' %}">Create</a></li>
+  <li><a href="{% url 'currenttodos' %}">Active</a></li>
+  <li><a href="{% url 'completedtodos' %}">Completed</a></li>
+</ul>
+
+
 
 <!-- <a href="{% url 'logoutuser' %}">Logout</a> -->
 <form method="POST" action="{% url 'logoutuser' %}">

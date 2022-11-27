@@ -1,8 +1,7 @@
 {% extends 'todo/base.html' %}
 
 {% block content %}
-
-Current
+<h2>Completed TODOs</h2>
 <ul>
     {% for todo in todos %}
     <a href="{% url 'viewtodo' todo.id %}">
@@ -14,5 +13,6 @@ Current
     </a>
     {% endfor %}
 </ul>
+<p><a href="{% url 'currenttodos' %}">Back to active TODOs</a></p>
 
 {% endblock %}

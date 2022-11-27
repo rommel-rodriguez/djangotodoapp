@@ -16,6 +16,8 @@ from .models import Todo
 
 SIGNUP_TEMPLATE = 'todo/signupuser.html'
 LOGIN_TEMPLATE = 'todo/loginuser.html'
+CURRENTTODOS_TEMPLATE = 'todo/currenttodos.html'
+COMPLETEDTODOS_TEMPLATE = 'todo/completedtodos.html'
 CREATETODO_TEMPLATE = 'todo/createtodo.html'
 TODODETAIL_TEMPLATE = 'todo/tododetail.html'
 USERNAME_INPUT = 'username'
@@ -124,7 +126,13 @@ def createtodo(request):
 
 def currenttodos(request):
     todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
-    return render(request, 'todo/currenttodos.html', dict(todos=todos))
+    return render(request, CURRENTTODOS_TEMPLATE, dict(todos=todos))
+
+
+def completedtodos(request):
+    todos = Todo.objects.filter(user=request.user, datecompleted__isnull=False)
+    todos = todos.order_by('-datecompleted')
+    return render(request, COMPLETEDTODOS_TEMPLATE, dict(todos=todos))
 
 
 @require_http_methods(["GET", "POST"])

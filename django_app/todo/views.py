@@ -10,10 +10,11 @@ from django.contrib.auth import logout
 from django.contrib.auth import authenticate
 
 from .forms import TodoForm
+from .models import Todo
 
 SIGNUP_TEMPLATE = 'todo/signupuser.html'
 LOGIN_TEMPLATE = 'todo/loginuser.html'
-CREATETODO_TEMPLATE = 'todo/loginuser.html'
+CREATETODO_TEMPLATE = 'todo/createtodo.html'
 USERNAME_INPUT = 'username'
 FIRST_PASS_INPUT = 'password1'
 SECOND_PASS_INPUT = 'password2'
@@ -101,7 +102,23 @@ def createtodo(request):
                       CREATETODO_TEMPLATE,
                       dict(form=TodoForm())
                       )
+    try:
+        form = TodoForm(request.POST)
+        newtodo = form.save(commit=False)
+        newtodo.user = request.user
+        newtodo.save()
+    except ValueError:
+        return render(request,
+                      CREATETODO_TEMPLATE,
+                      dict(
+                          form=TodoForm(),
+                          error='Bad data passed in'
+                          )
+                      )
+
+    return redirect('currenttodos')
 
 
 def currenttodos(request):
-    return render(request, 'todo/currenttodos.html')
+    todos = Todo.objects.all() 
+    return render(request, 'todo/currenttodos.html', dict(todos=todos))

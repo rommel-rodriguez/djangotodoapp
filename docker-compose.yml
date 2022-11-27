@@ -1,0 +1,30 @@
+version: "3"
+services:
+    web:
+        image: todowoo:web
+        build:
+            context: .
+            dockerfile: Dockerfile
+    #         depends_on:
+    #             - db 
+        command: ./manage.py runserver 0.0.0.0:8000
+        environment:
+            #            - DB_HOST=db
+            - DB_PASSWORD=abc123
+            - API_HOST=web
+            - PYTHONDONTWRITEBYTECODE=1
+            - PYTHONUNBUFFERED=1
+            - ENV=DEV
+        volumes:
+            - ./django_app:/src
+#            - ./tests:/tests
+        ports:
+            - "8000:8000"
+
+#    db:
+#        image: postgres:9.6
+#        environment:
+#            - POSTGRES_USER=allocation
+#            - POSTGRES_PASSWORD=abc123
+#        ports:
+#            - "54321:5432"

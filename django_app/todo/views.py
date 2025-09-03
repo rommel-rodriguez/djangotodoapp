@@ -101,6 +101,7 @@ def logoutuser(request):
     return redirect('hometodos')
 
 
+@login_required 
 @require_http_methods(["GET", "POST"])
 def createtodo(request):
     if request.method == 'GET':
@@ -125,17 +126,20 @@ def createtodo(request):
     return redirect('currenttodos')
 
 
+@login_required 
 def currenttodos(request):
     todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
     return render(request, CURRENTTODOS_TEMPLATE, dict(todos=todos))
 
 
+@login_required 
 def completedtodos(request):
     todos = Todo.objects.filter(user=request.user, datecompleted__isnull=False)
     todos = todos.order_by('-datecompleted')
     return render(request, COMPLETEDTODOS_TEMPLATE, dict(todos=todos))
 
 
+@login_required 
 @require_http_methods(["GET", "POST"])
 def viewtodo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
@@ -150,6 +154,7 @@ def viewtodo(request, todo_pk):
         return render(request, TODODETAIL_TEMPLATE, dict(todo=todo, form=form,error='Bad Form'))
 
 
+@login_required 
 @require_http_methods(["POST",])
 def completetodo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
@@ -158,6 +163,7 @@ def completetodo(request, todo_pk):
     return redirect('currenttodos')
 
 
+@login_required 
 @require_http_methods(["POST",])
 def deletetodo(request, todo_pk):
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
